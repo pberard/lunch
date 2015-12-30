@@ -81,20 +81,21 @@
 		<td> <%= biz.name %> </td>
 		<td> <a title="See the map!" href="https://maps.google.com?q=<%= biz.location.address[0]%>"> 
 		<%= biz.location.address[0] %></a> </td>
-		<td>
-		<%= if biz.respond_to? :distance 
-			( biz.distance * 0.0006).round(1).to_s + " miles away" 
-			else 
-				"" 
-			end %>
-		</td>
+		<!--<td>
+		<%= #if biz.respond_to? :distance 
+			#( biz.distance * 0.0006).round(1).to_s + " miles away" 
+			#else 
+			#	"" 
+			#end 
+		%>
+		</td>-->
 	</tr>
 	<% @rownum += 1 %>
 	<% end %>
 		<tr style="display:none" id="row<%= @rownum %>" class="resultRow">
 			<td>Try a new search!</td>
 			<td></td>
-			<td></td>
+			<!--<td></td>-->
 		</tr>
 	</table>
 	<button onClick="nextRow()"> Next </button>
