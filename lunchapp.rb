@@ -1,3 +1,4 @@
+require 'erb'
 require 'yelp' # https://github.com/Yelp/yelp-ruby
 require 'sinatra'
 
