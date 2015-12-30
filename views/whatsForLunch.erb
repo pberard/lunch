@@ -12,7 +12,7 @@
 	function getLocation() {
 	    if (navigator.geolocation) 
 	    {
-	        navigator.geolocation.getCurrentPosition(updatePosition);
+	        navigator.geolocation.getCurrentPosition(updatePosition, showError);
 	    } else { 
 	        //"Geolocation is not supported by this browser.";
 	    	document.getElementById("location").style.display = "block";
@@ -22,6 +22,22 @@
 	    document.getElementById("lat").value = position.coords.latitude;
 	    document.getElementById("long").value = position.coords.longitude;
 	}
+	function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert( "User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert( "Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            alert( "The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            alert( "An unknown error occurred.");
+            break;
+    }
+}
 	//Show the first suggested result.  When loading for the first time, a default search for italian beef in chicago is shown.
 	function nextRow() {
 		//Make sure to hide the other rows

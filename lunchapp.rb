@@ -14,6 +14,7 @@ end
 
 get '/' do
 	logger.info "**** Looking for lunch... ****"
+	logger.info params
 	#For the future this list may be replaced by the list of restaurant types located here: https://www.yelp.com/developers/documentation/v2/all_category_list
 	@food = [
 			#Ethnic food types
@@ -26,18 +27,34 @@ get '/' do
 	#Where are we searching?  Try using lat/long first, otherwise check if they specified a location.
 	#Default to Chicago if nothing was entered.
 	useCoord = false
-	if !params[:lat].nil? && !params[:lat].empty? && !params[:long].nil? && !params[:long].empty?
+	logger.info "Lat/long: " + params[:lat].to_s + params[:long].to_s
+	if (params[:lat].nil? || params[:lat].empty? || params[:long].nil? || params[:long].empty?)
+		logger.info "Was true...."
+		if params[:lat].nil?
+			logger.info "Lat was nil"
+		end
+		if params[:lat].to_s.empty?
+			logger.info "lat was empty"
+		end
+		if params[:long].nil?
+			logger.info "Lon was nil"
+		end
+		if params[:long].to_s.empty?
+			logger.info "long was empty"
+		end
+	end
+	if !(params[:lat].nil? || params[:lat].empty? || params[:long].nil? || params[:long].empty?)
 		logger.info "Using Coordinates"
 		coords = { 
 			latitude: params[:lat], 
 			longitude: params[:long] 
 		}
 		useCoord = true
-	elsif !params[:where].nil?  
+	elsif !(params[:where].nil? || params[:where].empty?) 
 		logger.info "Using specific location"
 		@where = params[:where] 
 	else 
-		logger.info "Using Default value"
+		logger.info "Using Default location"
 		@where = "Chicago" 
 	end
 
@@ -49,7 +66,7 @@ get '/' do
 		logger.info "Searching for a specific item"
 		@what = params[:specific]
 	elsif params[:whiteListInput] == "true"
-		if params[:arr].length > 0
+		if !params[:arr].nil? && params[:arr].length > 0
 			logger.info "Searching via whitelist"
 			#Search using only the items that were checked
 			params[:arr].shuffle!
@@ -67,10 +84,11 @@ get '/' do
 			end
 			@what.chomp!(',')
 		else 
+			logger.info "Whitelist length was 0, searching for Italian beef"
 			@what = "Italian Beef"
 		end
 	elsif params[:blackListInput] == "true"
-		if params[:arr].length > 0
+		if !params[:arr].nil? && params[:arr].length > 0
 			logger.info "Searching via blacklist"
 			#Search for everything BUT what was checked.
 			#Subtract the array so we don't search for what the use doesn't want.
@@ -87,9 +105,11 @@ get '/' do
 			end
 			@what.chomp!(',')
 		else
+			logger.info "Blacklist length was 0, searching for Italian beef"
 			@what = "Italian Beef"
 		end
 	else
+		logger.info "Using default food"
 		@what = "Italian Beef"
 	end
 
@@ -105,23 +125,24 @@ get '/' do
 		limit: 10,
 		sort: @randSort
 	} 
-
+	logger.info parms
 	#Make the call to Yelp
 	if useCoord
 		logger.info "Searching by coordinates"
 		logger.info coords 
 		parms[:radius] = 1610 #1 mile, 1609.34 meters
-		logger.info parms 
+	
 		@retval = @@client.search_by_coordinates(coords, parms)
 	else
 		logger.info "Searching by specific location: " + @where
-		logger.info parms
+		
 		@retval = @@client.search(@where, parms)
 	end
 	@retval.businesses.shuffle!
 	
 	#In case theres a flop and no results come back, just do the default thing.  Italian beef it is!
 	if @retval.businesses.length < 1
+		logger.info "Didn't find anything, rerouting to default"
 		redirect to('/')
 	end
 	## Just for Debugging	
