@@ -109,10 +109,13 @@ get '/' do
 	#Make the call to Yelp
 	if useCoord
 		logger.info "Searching by coordinates"
+		logger.info coords 
 		parms[:radius] = 1610 #1 mile, 1609.34 meters
+		logger.info parms 
 		@retval = @@client.search_by_coordinates(coords, parms)
 	else
-		logger.info "Searching by specific location"
+		logger.info "Searching by specific location: " + @where
+		logger.info parms
 		@retval = @@client.search(@where, parms)
 	end
 	@retval.businesses.shuffle!
