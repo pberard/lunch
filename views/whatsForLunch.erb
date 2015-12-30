@@ -1,0 +1,137 @@
+<html>
+<head>
+	<title>What's For Lunch?</title>
+	<link rel="StyleSheet" type="text/css" href="/style.css">
+	<script> 
+	var rowNum = 0;
+	function pageLoad() {
+		getLocation();
+		nextRow();
+	}
+	//Set location for searching
+	function getLocation() {
+	    if (navigator.geolocation) 
+	    {
+	        navigator.geolocation.getCurrentPosition(updatePosition);
+	    } else { 
+	        //"Geolocation is not supported by this browser.";
+	    	document.getElementById("location").style.display = "block";
+	    }
+	}
+	function updatePosition(position) {	
+	    document.getElementById("lat").value = position.coords.latitude;
+	    document.getElementById("long").value = position.coords.longitude;
+	}
+	//Show the first suggested result.  When loading for the first time, a default search for italian beef in chicago is shown.
+	function nextRow() {
+		//Make sure to hide the other rows
+		var domElems = document.getElementsByClassName("resultRow");
+		for (var i = 0; i < domElems.length; i++) 
+		{
+			domElems[i].style.display = "none";
+		}
+
+		//Show the next row
+		var rowName = "row" + rowNum.toString();
+		document.getElementById(rowName).style.display = "block";
+		if(rowNum < domElems.length - 1)
+		{
+			rowNum += 1;
+		}
+	}
+	//Hide the food selection divs
+	function setFalse(){
+		var domElems = document.getElementsByClassName("blueLotus");
+		for (var i = 0; i < domElems.length; i++) 
+		{
+			domElems[i].style.display = "none";
+		}
+		domElems = document.getElementsByClassName("whiteLotus");
+		for (var i = 0; i < domElems.length; i++) 
+		{
+			domElems[i].value = false;
+		}
+	}
+	//Unhide a particular food selection div
+	function showSpecific(){
+		setFalse();
+		document.getElementById("specificSearch").style.display = "block";
+		document.getElementById("specificInput").value = true;
+	};
+	function showWhiteList(){
+		setFalse();
+		document.getElementById("whiteList").style.display = "block";
+		document.getElementById("whiteListInput").value = true;		
+	};
+	function showBlackList(){
+		setFalse();
+		document.getElementById("blackList").style.display = "block";
+		document.getElementById("blackListInput").value = true;	
+	};
+	</script>
+</head>
+<body onload="pageLoad()">
+	<div class="formDiv">
+	<h1>What's for Lunch?</h1>
+	<hr>
+	<table>
+	<% @rownum = 0 %>
+	<% @retval.businesses.each do |biz| %>
+	<tr style="display:none" id="row<%= @rownum %>" class="resultRow">
+		<td> <%= biz.name %> </td>
+		<td> <a title="See the map!" href="https://maps.google.com?q=<%= biz.location.address[0]%>"> 
+		<%= biz.location.address[0] %></a> </td>
+		<td>
+		<%= if biz.respond_to? :distance then 
+			( biz.distance * 0.0006).round(1).to_s + " miles away" else "" end %></td>
+	</tr>
+	<% @rownum += 1 %>
+	<% end %>
+		<tr style="display:none" id="row<%= @rownum %>" class="resultRow">
+			<td>Try a new search!</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<button onClick="nextRow()"> Next </button>
+	<hr>
+
+	<table>
+		<tr>
+			<td><a class="showLink" href="#" onclick="showSpecific();">Know exactly what you want?</a></td>
+			<td><a class="showLink" href="#" onclick="showWhiteList();">Have a general idea of what you want?</a></td>
+			<td><a class="showLink" href="#" onclick="showBlackList();">Know what you don't want?</a></td>
+		</tr>
+	</table>
+	<form action="/" method="GET">	    
+	    <div class="blueLotus" id="specificSearch" style="display:none">
+	    	<input class="whiteLotus"id="specificInput" name="specificInput" type="hidden" value="false" />
+	    	What would you like? <input type="text" name="specific"><br/>
+	    	Search Where? <input type="text" name="where"><br/>
+		</div>
+
+		<div class="blueLotus" id="whiteList" style="display:none	">
+			<input class="whiteLotus" id="whiteListInput" name="whiteListInput" type="hidden" value="false" />
+		    <h3>Check anything that strikes your fancy!</h3>
+		    <% @food.each do |food| %>
+		    	<input type="checkbox" name="arr[]" value="<%= food %>"> <%= food %> 
+		    <% end %>
+		    <br>
+		</div>
+
+		<div class="blueLotus" id="blackList" style="display:none">
+			<input class="whiteLotus" id="blackListInput" name="blackListInput" type="hidden" value="false" />
+			<h3>Just check off what you don't want to eat!</h3>
+		    <% @food.each do |food| %>
+		    	<input type="checkbox" name="arr[]" value="<%= food %>"> <%= food %> 
+		    <% end %>
+		    <br>
+		</div>
+
+	    <input id="lat" name="lat" type="hidden" value="" />
+	    <input id="long" name="long" type="hidden" value="" />
+	    <input type="submit" value="Tell Me What To Eat!">
+	</form>
+	</div>
+</body>
+</html>

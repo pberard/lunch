@@ -1,0 +1,49 @@
+div.formDiv {
+  position: absolute;
+  left: 50%;
+  top: 33%;
+  transform: translate(-50%, -50%);
+  
+  /*
+  This doesn't work
+  margin-left: -25%;
+  margin-top: -25%;
+  */
+  
+  width: 40%;
+  height: 60%;
+
+  padding: 20px;  
+  background: #089232;
+  color: white;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+body {
+  font-family: 'Palatino Linotype';
+  background: #003F13; /*#0D0D0D;*/
+}
+table {text-align: center;}
+td {text-align: center;}
+
+a:visited {color:white;}
+a {
+  link:white;
+  visited:white;
+  hover:#00601D;
+  active:white;
+}
+a.showLink {
+  link:white;
+  visited:white;
+  hover:white;
+  active:white;
+}
+h1 {
+  font-family: 'Palatino Linotype';
+  font-size: 24px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 19.8px;
+}

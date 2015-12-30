@@ -1,0 +1,58 @@
+###############################################################################
+                                 The BIG TODO
+
+So far, we can detect where a user is or let them specify a location.  If 
+none is specified, it will default to chicago.  Users can search by
+entering a term in the box or by checking boxes.  Eventually, I want them
+to be able to enter what they DON'T want.  To do this, I'll have a list
+of all the types of food we will search by, and then when users check boxes, 
+those options will be removed from the query.
+
+The app needs to be prettier as well. 
+
+-PB 11/11/15
+
+###############################################################################
+
+I've made the app a bit nicer to look at and changed up some formatting.
+Now, the user can choose how they search for lunch.  I need to add in the 
+functionality for blacklisting lunch options.  Then, I want to limit the 
+search results so that they only show one at a time.  The user will have to 
+click to get to the next result if they don't like the first one.
+ 
+-PB 11/15/15
+
+###############################################################################
+
+Noticed that if we try to search for too many things at once, yelp throws an
+exception saying that one of the parameters was wrong.  I think if the total
+number of characters in the search 'term' exceeds 50 this will happen (around 
+50ish, maybe a little over).  I wanted to do a subset of the user's selection
+anyway, so now I just take 5 random things (if we even have that many) and 
+run with those.
+
+Next time, add logging
+Avoid getting grocery stores as recommendations? Change category back to 
+restaurant?
+
+-PB 11/19/15
+
+###############################################################################
+
+Added some logging, room for improvement. Changed category filter back to 
+restaurants.
+
+Next time, change the display so you can click 'next' through the top 10 
+results.  Look into changing the category filter based on type of restaurant
+given the whitelist/blacklist.
+
+-PB 12/13/15
+
+###############################################################################
+
+Added a next button and the ability to click through each result on the page.
+Cleaned stuff up in lunchapp.rb.
+
+-PB 12/29/15
+
+###############################################################################
