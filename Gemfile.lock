@@ -24,6 +24,5 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  erb
   sinatra
   yelp
