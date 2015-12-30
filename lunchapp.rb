@@ -26,14 +26,14 @@ get '/' do
 	#Where are we searching?  Try using lat/long first, otherwise check if they specified a location.
 	#Default to Chicago if nothing was entered.
 	useCoord = false
-	if !params[:lat].nil? && !params[:long].nil? then 
+	if !params[:lat].nil? && !params[:lat].empty? && !params[:long].nil? && !params[:long].empty?
 		logger.info "Using Coordinates"
 		coords = { 
 			latitude: params[:lat], 
 			longitude: params[:long] 
 		}
 		useCoord = true
-	elsif !params[:where].nil? then 
+	elsif !params[:where].nil?  
 		logger.info "Using specific location"
 		@where = params[:where] 
 	else 
