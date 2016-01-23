@@ -12,6 +12,41 @@ configure do
 	})
 end
 
+helpers do
+	def isNilOrEmpty?(x)
+		if (x.nil? || x.empty?)
+			return true
+		end
+		return false
+	end
+
+	def checkCoords?(lat, long)
+		logger.info "Lat/long: " + lat.to_s + ", " + long.to_s
+		if (isNilOrEmpty?(lat) || isNilOrEmpty?(long))
+			#return false
+			logger.info "Something was empty, debugging"
+			if lat.nil?
+				logger.info "Lat was nil"
+				return false
+			end
+			if lat.to_s.empty?
+				logger.info "lat was empty"
+				return false
+			end
+			if long.nil?
+				logger.info "Lon was nil"
+				return false
+			end
+			if long.to_s.empty?
+				logger.info "long was empty"
+				return false
+			end
+		end
+		return true
+	end
+
+end
+
 get '/' do
 	logger.info "**** Looking for lunch... ****"
 	logger.info params
@@ -27,30 +62,15 @@ get '/' do
 	#Where are we searching?  Try using lat/long first, otherwise check if they specified a location.
 	#Default to Chicago if nothing was entered.
 	useCoord = false
-	logger.info "Lat/long: " + params[:lat].to_s + params[:long].to_s
-	if (params[:lat].nil? || params[:lat].empty? || params[:long].nil? || params[:long].empty?)
-		logger.info "Was true...."
-		if params[:lat].nil?
-			logger.info "Lat was nil"
-		end
-		if params[:lat].to_s.empty?
-			logger.info "lat was empty"
-		end
-		if params[:long].nil?
-			logger.info "Lon was nil"
-		end
-		if params[:long].to_s.empty?
-			logger.info "long was empty"
-		end
-	end
-	if !(params[:lat].nil? || params[:lat].empty? || params[:long].nil? || params[:long].empty?)
+	
+	if (checkCoords?(params[:lat], params[:long]))
 		logger.info "Using Coordinates"
 		coords = { 
 			latitude: params[:lat], 
 			longitude: params[:long] 
 		}
 		useCoord = true
-	elsif !(params[:where].nil? || params[:where].empty?) 
+	elsif (!isNilOrEmpty?(params[:where])) 
 		logger.info "Using specific location"
 		@where = params[:where] 
 	else 
@@ -71,18 +91,21 @@ get '/' do
 			#Search using only the items that were checked
 			params[:arr].shuffle!
 
+			#Trim it down to five
 			if params[:arr].length > 5
 				whitelist = params[:arr][0, 5]
 			else
 				whitelist = params[:arr]
 			end
 
-			for i in 0..whitelist.length
-				if !whitelist[i].nil? 
-					@what += whitelist[i].to_s + ',' 
-				end
-			end
-			@what.chomp!(',')
+			#for i in 0..whitelist.length
+			#	if !whitelist[i].nil? 
+			#		@what += whitelist[i].to_s + ',' 
+			#	end
+			#end
+			#remove the last comma
+			#@what.chomp!(',')
+			@what = whitelist.join(",")
 		else 
 			logger.info "Whitelist length was 0, searching for Italian beef"
 			@what = "Italian Beef"
@@ -98,12 +121,13 @@ get '/' do
 				paintItBlack = paintItBlack[0, 5]
 			end
 
-			for i in 0..paintItBlack.length
-				if !paintItBlack[i].nil? 
-					@what += paintItBlack[i].to_s + ',' 
-				end
-			end
-			@what.chomp!(',')
+			#for i in 0..paintItBlack.length
+			#	if !paintItBlack[i].nil? 
+			#		@what += paintItBlack[i].to_s + ',' 
+			#	end
+			#end
+			#@what.chomp!(',')
+			@what = paintItBlack.join(",")
 		else
 			logger.info "Blacklist length was 0, searching for Italian beef"
 			@what = "Italian Beef"
