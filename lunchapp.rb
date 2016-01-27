@@ -7,8 +7,8 @@ configure do
 	@@client = Yelp::Client.new({
 	  consumer_key: "Nmnh3QptiqSUmuynvZw2Wg",
 	  consumer_secret: "gt742ogHxdElRljicnlPYn8pCVU",
-	  token: "ikDWHAGhx76OQHBkO7f5JE5uk5IO7HJR",
-	  token_secret: "2p50aw86_UCB19xyC1LPxwQekj4"
+	  token: "8K6LsEQ0LZIbqgr9NO8t5ODCYZoLLo79",
+	  token_secret: "VQ2hHuVKRK88sRA26rfDXvHKmig"
 	})
 end
 
