@@ -93,6 +93,7 @@
 	<h1>What's for Lunch?</h1>
 	<img src=".\images\Yelp\iOSWeb\yelp_powered_btn_light.png"/>
 	<hr>
+	<%= @error_message %>
 	<table>
 	<% @rownum = 0 %>
 	<% @retval.businesses.each do |biz| %>

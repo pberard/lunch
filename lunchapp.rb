@@ -147,10 +147,11 @@ get '/' do
 	#Shuffle the list to change it up
 	@retval.businesses.shuffle!
 	
-	#In case theres a flop and no results come back, just do the default thing.  Italian beef it is!
+	#In case theres a flop and no results come back
 	if @retval.businesses.length < 1
-		logger.info "Didn't find anything, rerouting to default"
-		redirect to('/')
+		#logger.info "Didn't find anything, rerouting to default"
+		@error_message = "Swing and a miss!<br> We couldn't find anything in your area that matches what you want. :["
+		#redirect to('/')
 	end
 
 	logger.info "**** Lunch has been found ****"
