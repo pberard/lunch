@@ -38,7 +38,7 @@
             break;
     }
 }
-	//Show the first suggested result.  When loading for the first time, a default search for italian beef in chicago is shown.
+	//Show the first suggested result.  When loading for the first time, default search for whatever is closest
 	function nextRow() {
 		//Make sure to hide the other rows
 		var domElems = document.getElementsByClassName("resultRow");
@@ -55,14 +55,16 @@
 			rowNum += 1;
 		}
 	}
-	//Hide the food selection divs
-	function setFalse(){
-		var domElems = document.getElementsByClassName("blueLotus");
+	
+	function hideAllSelectionDivs(){
+		//Hide the food selection divs
+		var domElems = document.getElementsByClassName("selectionDiv");
 		for (var i = 0; i < domElems.length; i++) 
 		{
 			domElems[i].style.display = "none";
 		}
-		domElems = document.getElementsByClassName("whiteLotus");
+		//Clear the food selection checkboxes
+		domElems = document.getElementsByClassName("selectionInput");
 		for (var i = 0; i < domElems.length; i++) 
 		{
 			domElems[i].value = false;
@@ -70,17 +72,17 @@
 	}
 	//Unhide a particular food selection div
 	function showSpecific(){
-		setFalse();
+		hideAllSelectionDivs();
 		document.getElementById("specificSearch").style.display = "block";
 		document.getElementById("specificInput").value = true;
 	};
 	function showWhiteList(){
-		setFalse();
+		hideAllSelectionDivs();
 		document.getElementById("whiteList").style.display = "block";
 		document.getElementById("whiteListInput").value = true;		
 	};
 	function showBlackList(){
-		setFalse();
+		hideAllSelectionDivs();
 		document.getElementById("blackList").style.display = "block";
 		document.getElementById("blackListInput").value = true;	
 	};
@@ -89,29 +91,23 @@
 <body onload="pageLoad()">
 	<div class="formDiv">
 	<h1>What's for Lunch?</h1>
+	<img src=".\images\Yelp\iOSWeb\yelp_powered_btn_light.png"/>
 	<hr>
 	<table>
 	<% @rownum = 0 %>
 	<% @retval.businesses.each do |biz| %>
-	<tr style="display:none" id="row<%= @rownum %>" class="resultRow">
-		<td> <%= biz.name %> </td>
-		<td> <a title="See the map!" href="https://maps.google.com?q=<%= biz.location.address[0]%>"> 
+	<tr width="100%" style="display:none" id="row<%= @rownum %>" class="resultRow">
+		<td width="30%"> </td>
+		<td> <a target="_blank" title="See this business on Yelp!" href="<%= biz.url %>"> <%= biz.name %> </a> </td>
+		<td> <a target="_blank" title="See the map!" href="https://maps.google.com?q=<%= biz.location.address[0]%>"> 
 		<%= biz.location.address[0] %></a> </td>
-		<!--<td>
-		<%= #if biz.respond_to? :distance 
-			#( biz.distance * 0.0006).round(1).to_s + " miles away" 
-			#else 
-			#	"" 
-			#end 
-		%>
-		</td>-->
+		<td> </td>
+
 	</tr>
 	<% @rownum += 1 %>
 	<% end %>
-		<tr style="display:none" id="row<%= @rownum %>" class="resultRow">
-			<td>Try a new search!</td>
-			<td></td>
-			<!--<td></td>-->
+		<tr width="100%" style="display:none" id="row<%= @rownum %>" class="resultRow">
+			<td colspan="4">Try a new search!</td>
 		</tr>
 	</table>
 	<button onClick="nextRow()"> Next </button>
@@ -125,14 +121,14 @@
 		</tr>
 	</table>
 	<form action="/" method="GET">	    
-	    <div class="blueLotus" id="specificSearch" style="display:none">
-	    	<input class="whiteLotus"id="specificInput" name="specificInput" type="hidden" value="false" />
+	    <div class="selectionDiv" id="specificSearch" style="display:none">
+	    	<input class="selectionInput"id="specificInput" name="specificInput" type="hidden" value="false"/>
 	    	What would you like? <input type="text" name="specific"><br/>
 	    	Search Where? <input type="text" name="where"><br/>
 		</div>
 
-		<div class="blueLotus" id="whiteList" style="display:none	">
-			<input class="whiteLotus" id="whiteListInput" name="whiteListInput" type="hidden" value="false" />
+		<div class="selectionDiv" id="whiteList" style="display:none	">
+			<input class="selectionInput" id="whiteListInput" name="whiteListInput" type="hidden" value="false"/>
 		    <h3>Check anything that strikes your fancy!</h3>
 		    <% @food.each do |food| %>
 		    	<input type="checkbox" name="arr[]" value="<%= food %>"> <%= food %> 
@@ -140,8 +136,8 @@
 		    <br>
 		</div>
 
-		<div class="blueLotus" id="blackList" style="display:none">
-			<input class="whiteLotus" id="blackListInput" name="blackListInput" type="hidden" value="false" />
+		<div class="selectionDiv" id="blackList" style="display:none">
+			<input class="selectionInput" id="blackListInput" name="blackListInput" type="hidden" value="false"/>
 			<h3>Just check off what you don't want to eat!</h3>
 		    <% @food.each do |food| %>
 		    	<input type="checkbox" name="arr[]" value="<%= food %>"> <%= food %> 

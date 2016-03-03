@@ -23,9 +23,17 @@ body {
   font-family: 'Palatino Linotype';
   background: #003F13; /*#0D0D0D;*/
 }
-table {text-align: center;}
-td {text-align: center;}
-
+table {
+  text-align: center;
+  width: 100%;
+}
+tr {
+  text-align: center;
+  width: 100%;
+}
+td {
+  text-align: center;
+}
 a:visited {color:white;}
 a {
   link:white;
@@ -46,4 +54,7 @@ h1 {
   font-variant: normal;
   font-weight: 400;
   line-height: 19.8px;
+}
+.resultRow {
+  text-align:center;
 }
